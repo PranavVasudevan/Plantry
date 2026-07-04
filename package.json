@@ -1,8 +1,16 @@
 {
   "name": "plantry",
   "private": true,
+  "version": "1.0.0",
+  "description": "Plantry — a household grocery planning assistant with AI-powered suggestions.",
   "workspaces": [
     "backend",
+    "frontend",
     "ml-training"
-  ]
+  ],
+  "scripts": {
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "train": "npm run train --workspace=ml-training"
+  }
 }

@@ -3,6 +3,11 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
   body {
     @apply antialiased text-plantry-text bg-plantry-light dark:bg-zinc-950 dark:text-plantry-cream transition-colors duration-500;
   }
@@ -14,4 +19,19 @@
 
 .glass-card {
   @apply bg-white border border-stone-200 shadow-sm rounded-2xl dark:bg-zinc-900 dark:border-zinc-800;
+}
+
+/* Custom scrollbar for a cleaner look */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 10px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #374151;
 }

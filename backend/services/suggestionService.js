@@ -112,22 +112,17 @@ export async function generateSuggestions({
   });
 
   /* =========================
-     2. FORGETFULNESS (FIXED)
+     2. FORGETFULNESS
      ========================= */
   Object.entries(forgetScores || {}).forEach(([item, meta]) => {
     if (currentSet.has(item)) return;
     if (meta.evidenceCount < 5) return;
 
-    if (
-      meta.forgetProbability >= 0.12 &&
-      meta.forgetProbability <= 0.45
-    ) {
+    if (meta.forgetProbability >= 0.12 && meta.forgetProbability <= 0.45) {
       forgotten.push({
         item,
         score: meta.forgetProbability,
-        reason: `Missed in ${Math.round(
-          meta.forgetProbability * 100
-        )}% of trips.`
+        reason: `Missed in ${Math.round(meta.forgetProbability * 100)}% of trips.`
       });
     }
   });
@@ -142,7 +137,7 @@ export async function generateSuggestions({
     seasonalTemporal.push({
       item,
       score: meta.confidence,
-      reason: "You’re likely about to run out."
+      reason: "You're likely about to run out."
     });
   });
 
@@ -198,19 +193,12 @@ export async function generateSuggestions({
    HELPERS
    ========================= */
 
-//helpers
-
 function toSuggestion(type) {
   return s => ({
     id: s.item,
     name: capitalize(s.item),
     type,
-    confidence:
-      s.score >= 0.6
-        ? "high"
-        : s.score >= 0.4
-        ? "medium"
-        : "low",
+    confidence: s.score >= 0.6 ? "high" : s.score >= 0.4 ? "medium" : "low",
     score: s.score,
     reason: s.reason
   });

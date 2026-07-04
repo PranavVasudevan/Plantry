@@ -1,22 +1,15 @@
-export function generateRandomFact({
-  temporal,
-  forgetScores
-}) {
+export function generateRandomFact({ temporal, forgetScores }) {
   const facts = [];
 
-  // Temporal facts
   Object.entries(temporal || {}).forEach(([item, meta]) => {
     if (meta.confidence >= 0.5 && meta.avgGapDays) {
       facts.push({
         type: "temporal",
-        text: `You tend to buy ${capitalize(item)} every ${Math.round(
-          meta.avgGapDays
-        )} days.`
+        text: `You tend to buy ${capitalize(item)} every ${Math.round(meta.avgGapDays)} days.`
       });
     }
   });
 
-  // Forgetfulness facts
   Object.entries(forgetScores || {}).forEach(([item, meta]) => {
     if (meta.forgetProbability >= 0.3 && meta.evidenceCount >= 5) {
       facts.push({

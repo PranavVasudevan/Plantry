@@ -1,128 +1,178 @@
-# 🛒 Plantry
+# Plantry
 
-**Smart Grocery Planning Assistant**
+> **A behavior-aware grocery planning assistant that learns from your household's shopping habits to suggest what you might forget.**
 
-Plantry is a behavior-aware grocery planning application that helps households **plan better**, not just order faster.
-It learns from a household’s own shopping history to suggest items that are frequently bought together and items that are commonly forgotten and purchased later.
+Plantry helps users create smarter shopping lists by learning from their own purchase history instead of relying on generic recommendations. It combines lightweight machine learning models with a modern web application to identify frequently bought-together items, forgotten products, and recurring shopping patterns.
 
 ---
 
-## How to Run
+## Features
 
-### Prerequisites
+*  Smart shopping list creation from natural language input
+*  Frequently bought-together item suggestions
+*  Forgotten item prediction using probability-based scoring
+*  Recurring item reminders based on purchase history
+*  User feedback to improve future recommendations
+*  Shopping history and household insights
+*  Secure authentication with Firebase Authentication
 
-* Node.js (v18+)
-* npm
-* Firebase project access
+---
 
-### Train Models
+##  Architecture
+
+```text
+                React + TypeScript Frontend
+                           │
+                           ▼
+                 Express.js Backend API
+                           │
+        ┌──────────────────┼──────────────────┐
+        ▼                  ▼                  ▼
+ Firebase Auth      Firestore Database    ML Models
+                                          • Association Mining
+                                          • Bayesian Scoring
+                                          • Temporal Patterns
+```
+
+---
+
+##  Machine Learning
+
+Plantry generates recommendations by combining three lightweight and explainable models:
+
+| Model               | Purpose                                   |
+| ------------------- | ----------------------------------------- |
+| Association Mining  | Suggests items frequently bought together |
+| Bayesian Scoring    | Predicts items commonly forgotten         |
+| Temporal Heuristics | Identifies items due for repurchase       |
+
+Models are trained **per household**, making recommendations personalized rather than based on global shopping trends.
+
+---
+
+##  Tech Stack
+
+| Category       | Technologies                                        |
+| -------------- | --------------------------------------------------- |
+| Frontend       | React, TypeScript, Vite, Tailwind CSS               |
+| Backend        | Node.js, Express                                    |
+| Database       | Firebase Firestore                                  |
+| Authentication | Firebase Authentication                             |
+| AI             | Google Gemini *(optional natural-language parsing)* |
+| Analytics      | Looker Studio                                       |
+
+---
+
+##  Project Structure
+
+```text
+Plantry/
+│
+├── backend/
+│   ├── jobs/              # Scheduled background jobs
+│   ├── middleware/        # Authentication & error handling
+│   ├── routes/            # REST API endpoints
+│   ├── services/          # Business logic
+│   ├── utils/
+│   ├── firebaseAdmin.js
+│   └── index.js
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/    # Reusable UI components
+│   │   ├── context/       # Authentication context
+│   │   ├── lib/           # Firebase configuration
+│   │   ├── pages/         # Application pages
+│   │   ├── services/      # API client
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   └── vite.config.ts
+│
+├── ml-training/
+│   ├── models/            # ML models
+│   ├── trainAll.js        # Train all recommendation models
+│   ├── testInference.js   # Test inference pipeline
+│   └── fetchData.js
+│
+├── firestore.rules
+├── render.yaml
+├── package.json
+└── README.md
+```
+
+
+---
+
+##  Installation
+
+Clone the repository:
+
+```bash
+git clone <repository-url>
+cd Plantry
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create the required `.env` files from the provided `.env.example` files and configure your Firebase credentials.
+
+---
+
+##  Running the Project
+
+Start the backend:
+
+```bash
+npm run dev:backend
+```
+
+Start the frontend:
+
+```bash
+npm run dev:frontend
+```
+
+The application will be available locally after both services are running.
+
+---
+
+##  Training the Models
+
+After generating shopping history through the application, retrain the recommendation models:
 
 ```bash
 cd ml-training
-node trainAll.js
+node trainAll.js <firebase-user-uid>
 ```
 
-### Start Backend
+To test model predictions:
 
 ```bash
-cd backend
-npm install
-npm run dev
-```
-
-### Start Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
+node testInference.js <firebase-user-uid> milk bread
 ```
 
 ---
 
-## Core Features
+##  Security
 
-### Frequently Bought Together (Association Mining)
-
-* Learns item co-purchase patterns from past shopping trips
-* Household-specific (not global trends)
-
-**Examples:**
-Milk → Batter
-Onion → Tomato
+* Firebase Authentication for user sign-in
+* Backend verifies every Firebase ID token
+* Firestore is accessed only through the backend
+* Each user's data is isolated using their Firebase UID
 
 ---
 
-### Forgotten Item Detection (Probability-Based)
+##  Future Improvements
 
-* Identifies items frequently forgotten and bought later
-* Models “forgot to add to list” behavior using probabilistic scoring
-
-**Examples:**
-Ginger, oil, salt
-
----
-
-### Periodic & Temporal Awareness *(Experimental)*
-
-* Detects monthly or bi-monthly staples using time-gap heuristics
-* Provides soft reminders for recurring items
-* Includes limited hardcoded seasonal suggestions (e.g., mangoes)
+* Multi-user household support
+* Automatic model retraining
+* Better seasonal and contextual recommendations
+* Cross-household pattern learning while preserving privacy
+* Smarter natural language understanding
 
 ---
 
-### User Feedback on Suggestions
-
-* Users can remove suggestions temporarily or permanently
-* Suggestion frequency can be reduced via weight damping
-
----
-
-### History & Insights
-
-* Complete history of shopping events
-* Support for marking forgotten items after shopping
-* Insights into household shopping habits
-* Looker Studio integration for visual analytics
-
----
-
-## Data Used
-
-* Past shopping lists
-* Forgotten / bought-later items
-* Dates and frequencies
-
-No external personal data is used. All learning is **household-specific**.
-
----
-
-## Machine Learning Approach
-
-* Association mining (FP-Growth-style)
-* Bayesian probability scoring for forgetfulness
-* Rule-based temporal heuristics
-
-All models are lightweight, explainable, and trained using Firebase-stored data.
-
----
-
-## Tech Stack
-
-* Node.js
-* Firebase Firestore
-* Firebase Authentication
-* Google AI Studio (Gemini) – natural-language list parsing
-* Looker Studio – data visualization
-
----
-
-## Future Scope
-
-With a larger user base, learned patterns can be generalized across households via an overarching coordination model that complements the existing household-level intelligence.
-
----
-
-## Summary
-
-Plantry demonstrates how **behavior-aware intelligence** can improve everyday grocery planning using small, explainable models and household-specific data—without over-engineered AI or invasive data collection.

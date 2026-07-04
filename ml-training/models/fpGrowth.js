@@ -1,13 +1,10 @@
 export function trainFPGrowth(shoppingEvents, minSupport = 0.05, minConfidence = 0.35) {
-  const transactions = shoppingEvents.map(e =>
-    [...new Set(e.items)]
-  );
+  const transactions = shoppingEvents.map(e => [...new Set(e.items)]);
 
   const itemCount = {};
   const pairCount = {};
   const totalTx = transactions.length;
 
-  // Count items and pairs
   transactions.forEach(items => {
     items.forEach(a => {
       itemCount[a] = (itemCount[a] || 0) + 1;

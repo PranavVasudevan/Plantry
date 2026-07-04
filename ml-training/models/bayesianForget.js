@@ -14,9 +14,7 @@ export function trainBayesianForget(shoppingEvents, forgottenEvents) {
   for (const item in stats) {
     const forgotten = stats[item].forgotten;
 
-    const prob =
-      (forgotten + alpha) /
-      (totalEvents + alpha + beta);
+    const prob = (forgotten + alpha) / (totalEvents + alpha + beta);
 
     scores[item] = {
       forgetProbability: Number(prob.toFixed(3)),
